@@ -1,0 +1,16 @@
+{
+	"name": "omp-factory-droid",
+	"version": "1.0.0",
+	"description": "Factory Droid provider for oh-my-pi: device-code login, model discovery and Factory gateway routing",
+	"type": "module",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/DusKing1/omp-plugins.git",
+		"directory": "plugins/factory-droid"
+	},
+	"keywords": ["oh-my-pi", "omp", "omp-plugin", "factory", "droid"],
+	"omp": {
+		"extensions": ["./index.ts"]
+	}
+}
