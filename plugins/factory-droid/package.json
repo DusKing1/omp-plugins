@@ -1,6 +1,6 @@
 {
 	"name": "omp-factory-droid",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Factory Droid provider for oh-my-pi: device-code login, model discovery and Factory gateway routing",
 	"type": "module",
 	"license": "MIT",

@@ -310,8 +310,17 @@ async function refreshFactory(
 		fetch,
 		signal,
 	);
-	if (!result.ok || nonempty(result.body.error))
-		throw new Error(`Factory token refresh failed (HTTP ${result.status})`);
+	// Keep WorkOS's error code in the message: omp classifies `invalid_grant`
+	// as a dead grant (prompt re-login) and everything else as transient.
+	const code = nonempty(result.body.error);
+	if (!result.ok || code) {
+		const detail = [code, nonempty(result.body.error_description)]
+			.filter(Boolean)
+			.join(": ");
+		throw new Error(
+			`Factory token refresh failed (HTTP ${result.status}${detail ? ` ${detail}` : ""})`,
+		);
+	}
 	return factoryCredentials(result.body, fetch, credentials, signal);
 }
 
