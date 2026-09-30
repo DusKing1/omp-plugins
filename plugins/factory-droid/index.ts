@@ -40,6 +40,7 @@ import type {
 } from "@oh-my-pi/pi-ai";
 import type {
 	ExtensionAPI,
+	ExtensionContext,
 	ProviderModelConfig,
 } from "@oh-my-pi/pi-coding-agent";
 const PROVIDER = "factory-droid";
@@ -1435,6 +1436,21 @@ function streamFactory(
 	return outer;
 }
 
+// Factory access tokens last 24h and omp never refreshes OAuth before model
+// discovery, so a session opened a day later starts with a stale catalog until
+// its first request renews the login. Renew through omp's own refresh path
+// (single-flight, persisted, dead grants disabled), then refetch this
+// provider's models with the fresh token.
+async function renewExpiredLogin(
+	registry: ExtensionContext["modelRegistry"],
+): Promise<void> {
+	const auth = registry.authStorage;
+	if (!auth.credentials.hasOAuth(PROVIDER)) return;
+	if (await auth.keys.peek(PROVIDER)) return;
+	if (!(await registry.getApiKeyForProvider(PROVIDER))) return;
+	await registry.refreshDiscoverableProviders([PROVIDER], "online");
+}
+
 export default function factoryDroid(pi: ExtensionAPI): void {
 	pi.registerProvider(PROVIDER, {
 		baseUrl: apiHost(),
@@ -1451,5 +1467,11 @@ export default function factoryDroid(pi: ExtensionAPI): void {
 					region: credentials.region,
 				}),
 		},
+	});
+	pi.on("session_start", (_event, ctx) => {
+		// Background: session start must not wait on the network. omp already
+		// records refresh failures on the credential; a failed rediscovery keeps
+		// the cached catalog.
+		void renewExpiredLogin(ctx.modelRegistry).catch(() => {});
 	});
 }

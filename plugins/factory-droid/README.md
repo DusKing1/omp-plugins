@@ -16,7 +16,7 @@ Restart omp, then:
 /model factory-droid/<model-id>
 ```
 
-Login uses Factory's device-code flow: omp shows a URL and a code, you approve it in the browser, and omp stores and refreshes the token like any other OAuth provider.
+Login uses Factory's device-code flow: omp shows a URL and a code, you approve it in the browser, and omp stores and refreshes the token like any other OAuth provider. Factory access tokens last 24 hours; when a session starts with an expired one, the plugin renews it right away through omp and refetches the model list, so you only log in again if Factory revokes the login.
 
 ## What it does
 
@@ -35,7 +35,7 @@ This project is not affiliated with Factory. Using it is subject to your Factory
 
 ## Compatibility
 
-Tested with omp 18.3.x on Windows. A native `factory-droid` provider for omp is proposed in [can1357/oh-my-pi#13276](https://github.com/can1357/oh-my-pi/pull/13276). If your omp release includes it, uninstall this plugin: both use the provider ID `factory-droid`, and the plugin's registration replaces the native provider's models.
+Requires omp 18.3.3 or newer; tested with omp 18.4.4 on Windows. A native `factory-droid` provider for omp is proposed in [can1357/oh-my-pi#13276](https://github.com/can1357/oh-my-pi/pull/13276). If your omp release includes it, uninstall this plugin: both use the provider ID `factory-droid`, and the plugin's registration replaces the native provider's models.
 
 ## Credits
 
