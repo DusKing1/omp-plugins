@@ -11,7 +11,7 @@
 		{
 			"name": "factory-droid",
 			"source": "./factory-droid",
-			"version": "1.0.1",
+			"version": "1.0.2",
 			"description": "Use Factory Droid models in omp: device-code login, model discovery and Factory gateway routing",
 			"category": "providers",
 			"license": "MIT",

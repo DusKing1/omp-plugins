@@ -684,7 +684,10 @@ async function currentPolicy(key: string): Promise<PolicySnapshot> {
 async function discoverFactory(
 	key: string | undefined,
 ): Promise<ProviderModelConfig[]> {
-	if (!key) return [];
+	// omp passes no key once the 24h access token has expired (discovery never
+	// refreshes OAuth). An empty list would be cached as "this account has no
+	// models" and hide every Factory model; failing keeps the last catalog.
+	if (!key) throw new Error("Factory credential unavailable for discovery");
 	const policy = await currentPolicy(key);
 	return [...policy.visible.values()].map(({ entry }) =>
 		modelConfig(entry, policy.servingRegion),
